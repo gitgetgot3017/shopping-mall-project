@@ -6,12 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import shoppingmall.item.dto.ItemRegForm;
+import shoppingmall.item.dto.ItemSearchDto;
 import shoppingmall.item.entity.Item;
 import shoppingmall.item.service.ItemImgService;
 import shoppingmall.item.service.ItemService;
@@ -29,6 +27,7 @@ public class ItemController {
 
     private final ItemService itemService;
     private final ItemImgService itemImgService;
+    private final int INDEXNUM_PER_PAGE = 5;
 
     @GetMapping("/reg")
     public String itemReg(Model model) {
@@ -114,5 +113,38 @@ public class ItemController {
             return false;
         }
         return true;
+    }
+
+    @GetMapping("/{page}")
+    public String itemList(@PathVariable int page, @ModelAttribute ItemSearchDto itemSearchDto, Model model) {
+
+        try {
+            List<Item> items = itemService.showItems(itemSearchDto, page, model);
+            model.addAttribute("items", items);
+            pageInfoToView(page, model);
+
+        } catch (SQLException e) {
+            //SQLException에 대한 처리 아직 안 함.
+//            bindingResult.reject("DBError", "DB에 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.");
+        }
+
+        return "item/itemList";
+    }
+
+    public void pageInfoToView(int page, Model model) {
+        //Model에 currentPage 저장
+        model.addAttribute("currentPage", page);
+
+        //Model에 startPage 저장
+        int startPage = page%INDEXNUM_PER_PAGE==0 ? INDEXNUM_PER_PAGE*((page/INDEXNUM_PER_PAGE)-1)+1 : INDEXNUM_PER_PAGE*(page/INDEXNUM_PER_PAGE)+1;
+        model.addAttribute("startPage", startPage);
+
+        //Model에 endPage 저장
+        int pageNum = (int) model.getAttribute("pageNum");
+        int endPage = startPage+(INDEXNUM_PER_PAGE-1);
+        if (pageNum < endPage) {
+            endPage = pageNum;
+        }
+        model.addAttribute("endPage", endPage);
     }
 }

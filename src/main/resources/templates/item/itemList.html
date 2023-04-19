@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::div})}">
+
+<div>
+
+    <form th:action="@{/admin/item/1}" method="GET" th:object="${itemSearchDto}">
+        <div th:if="${pageNum != 0}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>상품아이디</td>
+                    <td>상품명</td>
+                    <td>가격</td>
+                    <td>재고</td>
+                    <td>판매상태</td>
+                    <td>등록일</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${items}">
+                    <td th:text="${item.itemNum}"></td>
+                    <td><a th:href="@{/admin/item/edit/{itemNum}(itemNum=${item.itemNum})}" th:text="${item.itemName}"></a></td>
+                    <td th:text="${item.price}"></td>
+                    <td th:text="${item.stock}"></td>
+                    <td th:text="${#strings.equals(item.itemSellStatus, 'SELL')} ? '판매중' : '품절'"></td>
+                    <td th:text="${item.regdate}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:if="${startPage} != 1">
+                        <a class="page-link" th:href="@{/admin/item/{page}(page=${startPage}-1, regDuration=${param.regDuration}, itemSellStatus=${param.itemSellStatus}, search=${param.search})}">&laquo;</a>
+                    </li>
+
+                    <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <a class="page-link" th:classappend="${currentPage == page ? 'active' : _}" th:text="${page}"
+                           th:href="@{/admin/item/{page}(page=${page}, regDuration=${param.regDuration}, itemSellStatus=${param.itemSellStatus}, search=${param.search})}"></a>
+                    </li>
+
+                    <li class="page-item" th:if="${endPage} != ${pageNum}">
+                        <a class="page-link" th:href="@{/admin/item/{page}(page=${endPage}+1, regDuration=${param.regDuration}, itemSellStatus=${param.itemSellStatus}, search=${param.search})}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div th:unless="${pageNum != 0}">
+            조회된 결과가 없습니다. 다시 입력해주세요.
+        </div>
+
+        <div class="d-inline-flex">
+            <select th:field="*{regDuration}" class="form-control">
+                <option value="all">전체기간</option>
+                <option value="1d">1일</option>
+                <option value="1w">1주</option>
+                <option value="1m">1개월</option>
+                <option value="6m">6개월</option>
+            </select>
+            <select th:field="*{itemSellStatus}" class="form-control">
+                <option value="">판매상태(전체)</option>
+                <option value="SELL">판매</option>
+                <option value="SOLD_OUT">품절</option>
+            </select>
+            <input type="text" th:field="*{search}" class="form-control" placeholder="상품명을 입력해주세요">
+        </div>
+        <button class="btn btn-primary" type="submit">검색</button>
+    </form>
+
+</div>
+
+</html>

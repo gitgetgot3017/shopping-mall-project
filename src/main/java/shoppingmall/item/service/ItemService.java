@@ -2,10 +2,13 @@ package shoppingmall.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import shoppingmall.item.dto.ItemSearchDto;
 import shoppingmall.item.entity.Item;
 import shoppingmall.item.respository.ItemRepository;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,5 +27,9 @@ public class ItemService {
         if (findItem.isPresent()) {
             throw new IllegalStateException("해당 상품명은 이미 등록되어 있습니다.");
         }
+    }
+
+    public List<Item> showItems(ItemSearchDto itemSearchDto, int page, Model model) throws SQLException {
+        return itemRepository.findItems(itemSearchDto, page, model);
     }
 }
