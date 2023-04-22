@@ -26,4 +26,15 @@ public class MemberService {
             throw new IllegalStateException("아미 가입된 회원입니다.");
         }
     }
+
+    public Optional<Member> login(String id, String password) throws SQLException {
+
+        Optional<Member> member = memberRepository.findMemberById(id);
+        if (member.isPresent()) {
+            if (member.get().getPassword().equals(password)) {
+                return member;
+            }
+        }
+        return Optional.empty();
+    }
 }

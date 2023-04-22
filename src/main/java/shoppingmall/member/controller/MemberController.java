@@ -9,11 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import shoppingmall.member.constant.SessionConst;
 import shoppingmall.member.dto.JoinFormDto;
+import shoppingmall.member.dto.LoginFormDto;
 import shoppingmall.member.entity.Member;
 import shoppingmall.member.service.MemberService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/member")
@@ -50,6 +55,45 @@ public class MemberController {
         }
 
         //회원가입 성공
+        return "redirect:/";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("loginFormDto", new LoginFormDto());
+        return "member/loginForm";
+    }
+
+    @PostMapping("/login")
+    public String login(@Validated @ModelAttribute LoginFormDto loginFormDto, BindingResult bindingResult, HttpServletRequest request) throws SQLException {
+
+        /* 검증 실패 */
+        if (bindingResult.hasErrors()) {
+            return "member/loginForm";
+        }
+
+        /* 검증 성공 */
+        Optional<Member> member = memberService.login(loginFormDto.getId(), loginFormDto.getPassword());
+        if (member.isEmpty()) { //로그인 실패
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 일치하지 않습니다.");
+            return "member/loginForm";
+        }
+
+        //로그인 성공
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, member.get());
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false); //false: HttpSession 없는 비정상적인 상황을 고려하였음
+        if (session != null) {
+            session.invalidate();
+        }
+
         return "redirect:/";
     }
 }
