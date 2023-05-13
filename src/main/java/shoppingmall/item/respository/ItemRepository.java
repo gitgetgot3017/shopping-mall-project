@@ -1,23 +1,27 @@
 package shoppingmall.item.respository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import shoppingmall.item.constant.ItemSellStatus;
 import shoppingmall.item.dto.ItemSearchDto;
 import shoppingmall.item.entity.Item;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static shoppingmall.jdbc.constant.ConnectionConst.*;
-
 @Slf4j
+@RequiredArgsConstructor
 @Repository
 public class ItemRepository {
+
+    private final DataSource dataSource;
 
     private final int ROWNUM_PER_PAGE = 5;
 
@@ -28,7 +32,7 @@ public class ItemRepository {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, item.getItemName());
             pstmt.setInt(2, item.getPrice());
@@ -55,7 +59,7 @@ public class ItemRepository {
         ResultSet rs = null;
 
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, itemName);
             rs = pstmt.executeQuery();
@@ -82,7 +86,7 @@ public class ItemRepository {
         ResultSet rs = null;
 
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql);
 
             //1st parameter
@@ -151,7 +155,7 @@ public class ItemRepository {
         ResultSet rs = null;
 
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql);
 
             //1st parameter
@@ -202,30 +206,9 @@ public class ItemRepository {
         return dateTime;
     }
 
-    private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
-
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (pstmt != null) {
-            try {
-                pstmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+    private void close(Connection conn, Statement stmt, ResultSet rs) {
+        JdbcUtils.closeResultSet(rs);
+        JdbcUtils.closeStatement(stmt);
+        JdbcUtils.closeConnection(conn);
     }
 }

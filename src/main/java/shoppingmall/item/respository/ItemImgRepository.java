@@ -1,17 +1,22 @@
 package shoppingmall.item.respository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 import shoppingmall.item.entity.Item;
 import shoppingmall.item.entity.ItemImg;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
-import static shoppingmall.jdbc.constant.ConnectionConst.*;
-
 @Slf4j
+@RequiredArgsConstructor
 @Repository
 public class ItemImgRepository {
+
+    private final DataSource dataSource;
+
     public void saveItemImg(ItemImg itemImg) throws SQLException {
         String sql = "insert into item_img(item_num, save_img_name, upload_img_name, rep_img) values(?, ?, ?, ?)";
 
@@ -19,7 +24,7 @@ public class ItemImgRepository {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1, itemImg.getItem().getItemNum());
             pstmt.setString(2, itemImg.getSaveImgName());
@@ -34,30 +39,9 @@ public class ItemImgRepository {
         }
     }
 
-    private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
-
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (pstmt != null) {
-            try {
-                pstmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+    private void close(Connection conn, Statement stmt, ResultSet rs) {
+        JdbcUtils.closeResultSet(rs);
+        JdbcUtils.closeStatement(stmt);
+        JdbcUtils.closeConnection(conn);
     }
 }

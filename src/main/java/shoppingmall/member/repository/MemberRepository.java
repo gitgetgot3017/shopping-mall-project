@@ -1,17 +1,21 @@
 package shoppingmall.member.repository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 import shoppingmall.member.entity.Member;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Optional;
 
-import static shoppingmall.jdbc.constant.ConnectionConst.*;
-
 @Slf4j
+@RequiredArgsConstructor
 @Repository
 public class MemberRepository {
+
+    private final DataSource dataSource;
 
     public void saveMember(Member member) throws SQLException {
         String sql = "insert into member(id, password, name, phone, email, regdate, role) values(?, ?, ?, ?, ?, ?, ?)";
@@ -20,7 +24,7 @@ public class MemberRepository {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, member.getId());
             pstmt.setString(2, member.getPassword());
@@ -46,7 +50,7 @@ public class MemberRepository {
         ResultSet rs = null;
 
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, id);
             rs = pstmt.executeQuery();
@@ -67,29 +71,9 @@ public class MemberRepository {
         }
     }
 
-    private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (pstmt != null) {
-            try {
-                pstmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+    private void close(Connection conn, Statement stmt, ResultSet rs) {
+        JdbcUtils.closeResultSet(rs);
+        JdbcUtils.closeStatement(stmt);
+        JdbcUtils.closeConnection(conn);
     }
 }
