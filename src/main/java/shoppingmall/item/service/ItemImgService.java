@@ -10,7 +10,6 @@ import shoppingmall.item.respository.ItemImgRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.UUID;
 
 @Service
@@ -22,7 +21,7 @@ public class ItemImgService {
     @Value("${file.dir}")
     private String fileDir;
 
-    public void regItemImg(MultipartFile multipartFile, Item item, boolean repImg) throws SQLException, IOException {
+    public void regItemImg(MultipartFile multipartFile, Item item, boolean repImg) throws IOException {
 
         //storage에 이미지 파일 저장
         String uploadImgName = multipartFile.getOriginalFilename();

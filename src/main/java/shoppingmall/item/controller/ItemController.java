@@ -15,7 +15,6 @@ import shoppingmall.item.service.ItemImgService;
 import shoppingmall.item.service.ItemService;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -66,9 +65,6 @@ public class ItemController {
             log.info("regItemImg WithoutItem");
             bindingResult.reject("regItemImgWithoutItem", "삭제된 상품에 대한 이미지를 등록할 수 없습니다.");
             return "item/itemRegForm";
-        } catch (SQLException e) {
-            bindingResult.reject("DBError", "DB에 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.");
-            return "item/itemRegForm";
         } catch (IOException e) {
             log.info("ItemImgSave Error");
             bindingResult.reject("ItemImgSaveError", "상품 이미지를 저장하는 과정에서 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.");
@@ -117,15 +113,9 @@ public class ItemController {
     @GetMapping("/items")
     public String itemList(@RequestParam(defaultValue = "1") int page, @ModelAttribute ItemSearchDto itemSearchDto, Model model) {
 
-        try {
-            List<Item> items = itemService.showItems(itemSearchDto, page, model);
-            model.addAttribute("items", items);
-            pageInfoToView(page, model);
-
-        } catch (SQLException e) {
-            //SQLException에 대한 처리 아직 안 함.
-//            bindingResult.reject("DBError", "DB에 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.");
-        }
+        List<Item> items = itemService.showItems(itemSearchDto, page, model);
+        model.addAttribute("items", items);
+        pageInfoToView(page, model);
 
         return "item/itemList";
     }

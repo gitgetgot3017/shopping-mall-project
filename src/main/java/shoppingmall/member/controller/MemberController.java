@@ -16,7 +16,6 @@ import shoppingmall.member.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.Optional;
 
 @Controller
@@ -47,9 +46,6 @@ public class MemberController {
         } catch (IllegalStateException e) { //회원가입 실패
             bindingResult.reject("joinFail", "이미 가입된 회원입니다.");
             return "member/joinForm";
-        } catch (SQLException e) {
-            bindingResult.reject("DBError", "DB에 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.");
-            return "member/joinForm";
         }
 
         //회원가입 성공
@@ -63,7 +59,7 @@ public class MemberController {
     }
 
     @PostMapping("/members-login")
-    public String login(@Validated @ModelAttribute LoginFormDto loginFormDto, BindingResult bindingResult, HttpServletRequest request) throws SQLException {
+    public String login(@Validated @ModelAttribute LoginFormDto loginFormDto, BindingResult bindingResult, HttpServletRequest request) {
 
         /* 검증 실패 */
         if (bindingResult.hasErrors()) {
