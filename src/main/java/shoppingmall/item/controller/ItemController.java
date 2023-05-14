@@ -2,12 +2,15 @@ package shoppingmall.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import shoppingmall.item.dto.ItemEditDto;
+import shoppingmall.item.dto.ItemEditForm;
 import shoppingmall.item.dto.ItemRegForm;
 import shoppingmall.item.dto.ItemSearchDto;
 import shoppingmall.item.entity.Item;
@@ -135,5 +138,40 @@ public class ItemController {
             endPage = pageNum;
         }
         model.addAttribute("endPage", endPage);
+    }
+
+    @GetMapping("/items-editform/{itemNum}")
+    public String itemEdit(@PathVariable long itemNum, Model model) {
+
+        try {
+            ItemEditDto itemEditDto = itemService.findItem(itemNum).get();
+            model.addAttribute("itemEditDto", itemEditDto);
+        } catch (NoSuchElementException e) {
+            log.info("EditItem WithoutItem");
+//            bindingResult.reject("regItemImgWithoutItem", "삭제된 상품에 대한 이미지를 등록할 수 없습니다.");
+//            return "item/itemRegForm";
+        }
+
+        return "item/itemEditForm";
+    }
+
+    @PutMapping("/items/{itemNum}")
+    public String itemEdit(@Validated @ModelAttribute("itemEditDto") ItemEditForm itemEditForm, BindingResult bindingResult, @PathVariable long itemNum) {
+
+        //검증 실패
+        if (bindingResult.hasErrors()) {
+            return "item/itemEditForm";
+        }
+
+        //상품명(PK) 중복 오류
+        try {
+            Item item = ItemEditForm.createMember(itemEditForm);
+            itemService.modifyItem(item);
+        } catch (DuplicateKeyException e) {
+            bindingResult.reject("duplidateItemName", "이미 존재하는 상품명입니다. 다른 상품명을 입력해주세요.");
+            return "item/itemEditForm";
+        }
+
+        return "redirect:/items";
     }
 }

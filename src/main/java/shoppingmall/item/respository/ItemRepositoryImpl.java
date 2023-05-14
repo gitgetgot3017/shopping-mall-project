@@ -3,10 +3,12 @@ package shoppingmall.item.respository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import shoppingmall.exception.RuntimeSQLException;
 import shoppingmall.item.constant.ItemSellStatus;
+import shoppingmall.item.dto.ItemEditDto;
 import shoppingmall.item.dto.ItemSearchDto;
 import shoppingmall.item.entity.Item;
 
@@ -205,6 +207,62 @@ public class ItemRepositoryImpl implements ItemRepository {
             dateTime = dateTime.minusMonths(6);
         }
         return dateTime;
+    }
+
+    @Override
+    public Optional<ItemEditDto> findByItemNum(long itemNum) {
+        String sql = "select item_num, item_name, price, item_detail, stock, item_sell_status from item where item_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, itemNum);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                ItemEditDto itemEditDto = new ItemEditDto(
+                        rs.getLong("item_num"),
+                        rs.getString("item_name"),
+                        rs.getInt("price"),
+                        rs.getString("item_detail"),
+                        rs.getInt("stock"),
+                        ItemSellStatus.valueOf(rs.getString("item_sell_status")));
+                return Optional.of(itemEditDto);
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public void updateItem(Item item) {
+        String sql = "update item set item_name = ?, price = ?, item_detail = ?, stock = ?, item_sell_status = ? where item_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, item.getItemName());
+            pstmt.setInt(2, item.getPrice());
+            pstmt.setString(3, item.getItemDetail());
+            pstmt.setInt(4, item.getStock());
+            pstmt.setString(5, String.valueOf(item.getItemSellStatus()));
+            pstmt.setLong(6, item.getItemNum());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLErrorCodeSQLExceptionTranslator(dataSource).translate("update", sql, e); //EX. throw new DuplicateKeyException(e);
+        } finally {
+            close(conn, pstmt, null);
+        }
     }
 
     private void close(Connection conn, Statement stmt, ResultSet rs) {

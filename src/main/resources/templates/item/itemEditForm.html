@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::div})}">
+
+<div>
+
+    <form method="POST" th:action="@{/items/{itemNum}(itemNum=${itemEditDto.itemNum})}" th:object="${itemEditDto}" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="PUT">
+
+        <p class="h2">
+            상품 수정
+        </p>
+
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="globalErr : ${#fields.globalErrors()}" th:text="${globalErr}"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="itemNum">상품 번호</label>
+            <input type="text" id="itemNum" th:field="*{itemNum}" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="itemName">상품명</label>
+            <input type="text" id="itemName" th:field="*{itemName}" class="form-control" th:errorclass="field-error">
+            <!-- 필드 오류 메시지 -->
+            <p class="field-error" th:errors="*{itemName}"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="price">가격</label>
+            <input type="number" id="price" th:field="*{price}" min="0" class="form-control" th:errorclass="field-error">
+            <!-- 필드 오류 메시지 -->
+            <p class="field-error" th:errors="*{price}"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="itemDetail">상품 상세 설명</label>
+            <textarea id="itemDetail" th:field="*{itemDetail}" class="form-control" th:errorclass="field-error" />
+            <!-- 필드 오류 메시지 -->
+            <p class="field-error" th:errors="*{itemDetail}"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="stock">재고</label>
+            <input type="number" id="stock" th:field="*{stock}" min="0" class="form-control" th:errorclass="field-error">
+            <!-- 필드 오류 메시지 -->
+            <p class="field-error" th:errors="*{stock}"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="itemSellStatus">판매 상태</label>
+            <select id="itemSellStatus" th:field="*{itemSellStatus}" class="form-control">
+                <option value="SELL">판매중</option>
+                <option value="SOLD_OUT">품절</option>
+            </select>
+        </div>
+        <br>
+
+        <div class="form-group">
+            <label>대표 상품 이미지</label>
+            <input type="file" name="itemImgFiles" class="form-control">
+        </div>
+        <div class="form-group" th:each="num: ${#numbers.sequence(1,4)}">
+            <label th:text="'선택 상품 이미지' + ${num}"></label>
+            <input type="file" name="itemImgFiles" class="form-control" >
+        </div>
+        <br>
+
+        <button type="submit" class="btn btn-primary">상품 수정</button>
+
+    </form>
+
+</div>
+
+</html>

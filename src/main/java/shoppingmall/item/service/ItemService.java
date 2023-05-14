@@ -3,6 +3,7 @@ package shoppingmall.item.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import shoppingmall.item.dto.ItemEditDto;
 import shoppingmall.item.dto.ItemSearchDto;
 import shoppingmall.item.entity.Item;
 import shoppingmall.item.respository.ItemRepository;
@@ -30,5 +31,13 @@ public class ItemService {
 
     public List<Item> showItems(ItemSearchDto itemSearchDto, int page, Model model) {
         return itemRepository.findItems(itemSearchDto, page, model);
+    }
+
+    public Optional<ItemEditDto> findItem(long itemNum) {
+        return itemRepository.findByItemNum(itemNum);
+    }
+
+    public void modifyItem(Item item) {
+        itemRepository.updateItem(item);
     }
 }

@@ -1,6 +1,7 @@
 package shoppingmall.item.respository;
 
 import org.springframework.ui.Model;
+import shoppingmall.item.dto.ItemEditDto;
 import shoppingmall.item.dto.ItemSearchDto;
 import shoppingmall.item.entity.Item;
 
@@ -13,4 +14,6 @@ public interface ItemRepository {
     Optional<Item> findByItemName(String itemName);
     List<Item> findItems(ItemSearchDto itemSearchDto, int page, Model model);
     int findRowNum(ItemSearchDto itemSearchDto);
+    Optional<ItemEditDto> findByItemNum(long itemNum);
+    void updateItem(Item item);
 }
