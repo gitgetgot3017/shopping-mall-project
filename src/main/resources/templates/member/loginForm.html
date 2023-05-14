@@ -4,7 +4,7 @@
 
 <div>
 
-    <form method="POST" th:object="${loginFormDto}">
+    <form method="POST" action="/members-login" th:object="${loginFormDto}">
         <!-- 글로벌 오류 메시지 -->
         <div th:if="${#fields.hasGlobalErrors()}">
             <p class="field-error" th:each="globalErr : ${#fields.globalErrors()}" th:text="${globalErr}"></p>

@@ -8,7 +8,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import shoppingmall.member.constant.SessionConst;
 import shoppingmall.member.dto.JoinFormDto;
 import shoppingmall.member.dto.LoginFormDto;
@@ -21,19 +20,18 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/join")
+    @GetMapping("/members-joinform")
     public String join(Model model) {
         model.addAttribute("joinFormDto", new JoinFormDto());
         return "member/joinForm";
     }
 
-    @PostMapping("/join")
+    @PostMapping("/members")
     public String join(@Validated @ModelAttribute JoinFormDto joinFormDto, BindingResult bindingResult) {
 
         /* 검증 실패 */
@@ -58,13 +56,13 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/members-loginform")
     public String login(Model model) {
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "member/loginForm";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/members-login")
     public String login(@Validated @ModelAttribute LoginFormDto loginFormDto, BindingResult bindingResult, HttpServletRequest request) throws SQLException {
 
         /* 검증 실패 */
@@ -86,7 +84,7 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/members-logout")
     public String logout(HttpServletRequest request) {
 
         HttpSession session = request.getSession(false); //false: HttpSession 없는 비정상적인 상황을 고려하였음

@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/item")
 @RequiredArgsConstructor
 public class ItemController {
 
@@ -29,13 +28,13 @@ public class ItemController {
     private final ItemImgService itemImgService;
     private final int INDEXNUM_PER_PAGE = 5;
 
-    @GetMapping("/reg")
+    @GetMapping("/items-regform")
     public String itemReg(Model model) {
         model.addAttribute("itemRegForm", new ItemRegForm());
         return "item/itemRegForm";
     }
 
-    @PostMapping("/reg")
+    @PostMapping("/items")
     public String itemReg(@Validated @ModelAttribute ItemRegForm itemRegForm, BindingResult bindingResult) {
 
         //검증 실패
@@ -77,7 +76,7 @@ public class ItemController {
         }
 
         //상품 등록 성공
-        return "redirect:/admin/item/1";
+        return "redirect:/items";
     }
 
     private void validateAttachFile(List<MultipartFile> itemImgFiles, BindingResult bindingResult) {
@@ -115,8 +114,8 @@ public class ItemController {
         return true;
     }
 
-    @GetMapping("/{page}")
-    public String itemList(@PathVariable int page, @ModelAttribute ItemSearchDto itemSearchDto, Model model) {
+    @GetMapping("/items")
+    public String itemList(@RequestParam(defaultValue = "1") int page, @ModelAttribute ItemSearchDto itemSearchDto, Model model) {
 
         try {
             List<Item> items = itemService.showItems(itemSearchDto, page, model);
