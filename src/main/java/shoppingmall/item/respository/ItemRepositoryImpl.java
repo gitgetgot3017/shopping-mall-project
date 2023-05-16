@@ -8,8 +8,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import shoppingmall.exception.RuntimeSQLException;
 import shoppingmall.item.constant.ItemSellStatus;
+import shoppingmall.item.constant.ItemSortBy;
 import shoppingmall.item.dto.ItemEditDto;
 import shoppingmall.item.dto.ItemSearchDto;
+import shoppingmall.item.dto.MainItemDto;
+import shoppingmall.item.dto.MainItemSearchDto;
 import shoppingmall.item.entity.Item;
 
 import javax.sql.DataSource;
@@ -27,6 +30,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     private final DataSource dataSource;
 
     private final int ROWNUM_PER_PAGE = 5;
+    private final int ITEMNUM_PER_PAGE = 6;
 
     @Override
     public Optional<Item> saveItem(Item item) {
@@ -262,6 +266,86 @@ public class ItemRepositoryImpl implements ItemRepository {
             throw new SQLErrorCodeSQLExceptionTranslator(dataSource).translate("update", sql, e); //EX. throw new DuplicateKeyException(e);
         } finally {
             close(conn, pstmt, null);
+        }
+    }
+
+    @Override
+    public List<MainItemDto> findItemsMain(MainItemSearchDto mainSearchDto, int page) {
+
+        String sortBySql = "regdate desc ";
+        ItemSortBy sortBy = mainSearchDto.getSortBy();
+        if (sortBy != null && sortBy.equals(ItemSortBy.lowPrice)) {
+            sortBySql = "price ";
+        } else if (sortBy != null && sortBy.equals(ItemSortBy.highPrice)) {
+            sortBySql = "price desc ";
+        }
+
+        String sql = "select * " +
+                "from (select * from item where item_sell_status = 'SELL') fi join (select * from item_img where rep_img = true) fii on fi.item_num = fii.item_num " +
+                "where item_name like ? " +
+                "order by " + sortBySql +
+                "limit ? offset ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            if (mainSearchDto.getSearch() == null) {
+                pstmt.setString(1, "%%");
+            } else {
+                pstmt.setString(1, "%" + mainSearchDto.getSearch() + "%");
+            }
+            pstmt.setInt(2, ITEMNUM_PER_PAGE);
+            pstmt.setInt(3, ITEMNUM_PER_PAGE * (page - 1));
+            rs = pstmt.executeQuery();
+
+            List<MainItemDto> mainItems = new ArrayList<>();
+            while (rs.next()) {
+                mainItems.add(new MainItemDto(
+                        rs.getLong("item_num"),
+                        rs.getString("item_name"),
+                        rs.getInt("price"),
+                        rs.getString("save_img_name")));
+            }
+            return mainItems;
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public int findRowNum(String search) {
+        String sql = "select count(*) " +
+                "from (select * from item where item_sell_status = 'SELL') fi join (select * from item_img where rep_img = true) fii on fi.item_num = fii.item_num " +
+                "where item_name like ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            if (search == null) {
+                pstmt.setString(1, "%%");
+            } else {
+                pstmt.setString(1, "%" + search + "%");
+            }
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, rs);
         }
     }
 

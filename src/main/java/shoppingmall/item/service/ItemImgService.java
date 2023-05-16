@@ -32,7 +32,7 @@ public class ItemImgService {
         itemImgRepository.saveItemImg(new ItemImg(item, saveImgName, uploadImgName, repImg));
     }
 
-    private String getFullPath(String fileName) {
+    public String getFullPath(String fileName) {
         return fileDir + fileName;
     }
 

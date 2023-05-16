@@ -3,6 +3,8 @@ package shoppingmall.item.respository;
 import org.springframework.ui.Model;
 import shoppingmall.item.dto.ItemEditDto;
 import shoppingmall.item.dto.ItemSearchDto;
+import shoppingmall.item.dto.MainItemDto;
+import shoppingmall.item.dto.MainItemSearchDto;
 import shoppingmall.item.entity.Item;
 
 import java.util.List;
@@ -16,4 +18,6 @@ public interface ItemRepository {
     int findRowNum(ItemSearchDto itemSearchDto);
     Optional<ItemEditDto> findByItemNum(long itemNum);
     void updateItem(Item item);
+    List<MainItemDto> findItemsMain(MainItemSearchDto mainSearchDto, int page);
+    int findRowNum(String search);
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::div})}">
+
+<div>
+
+    <div th:if="${presentItemYn}">
+        <div>
+            <a th:href="@{/(search=${param.search}, sortBy=${'recently'})}" th:style="${#strings.equals(param.sortBy, 'recently')} ? 'font-weight: bold;' : _">최신순</a>
+            <a th:href="@{/(search=${param.search}, sortBy=${'lowPrice'})}" th:style="${#strings.equals(param.sortBy, 'lowPrice')} ? 'font-weight: bold;' : _">가격낮은순</a>
+            <a th:href="@{/(search=${param.search}, sortBy=${'highPrice'})}" th:style="${#strings.equals(param.sortBy, 'highPrice')} ? 'font-weight: bold;' : _">가격높은순</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="mainItem : ${mainItems}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="card">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <a th:href="@{/items/{itemNum}(itemNum=${mainItem.itemNum})}"><img th:src="@{/image/{saveImgName}(saveImgName=${mainItem.saveImgName})}" class="card-img-top" alt="" height="400px"></a>
+                    <div class="card-body">
+                        <a th:href="@{/items/{itemNum}(itemNum=${mainItem.itemNum})}"><h5 class="card-title" th:text="${mainItem.itemName}"></h5></a>
+                        <p class="card-text" th:text="${mainItem.price} + '원'"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:if="${prevOx}">
+                    <a class="page-link" th:href="@{/(search=${param.search}, sortBy=${param.sortBy}, page=${startPage-1})}">&laquo;</a>
+                </li>
+
+                <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                    <a class="page-link" th:classappend="${page == currentPage ? 'active' : _}"
+                       th:href="@{/(search=${param.search}, sortBy=${param.sortBy}, page=${page})}" th:text="${page}"></a>
+                </li>
+
+                <li class="page-item" th:if="${nextOx}">
+                    <a class="page-link" th:href="@{/(search=${param.search}, sortBy=${param.sortBy}, page=${endPage+1})}">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:unless="${presentItemYn}">
+        상품이 존재하지 않습니다.
+    </div>
+
+</div>
+
+</html>
