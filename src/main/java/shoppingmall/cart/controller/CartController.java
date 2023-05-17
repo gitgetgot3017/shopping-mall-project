@@ -5,10 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import shoppingmall.cart.dto.ItemDetailForm;
 import shoppingmall.cart.service.CartService;
 import shoppingmall.item.service.ItemService;
@@ -52,5 +49,12 @@ public class CartController {
         cartService.putItemInCart(member.getMember_num(), itemDetailForm);
         //(장바구니에 상품이 담겼음으로 알리기. 상품 상세 커밋 이후에 가능)
         return "item/itemDetail";
+    }
+
+    @DeleteMapping("/{cartItemNum}")
+    public String cart(@PathVariable long cartItemNum) {
+
+        cartService.deleteItemFromCart(cartItemNum);
+        return "cart/cart";
     }
 }

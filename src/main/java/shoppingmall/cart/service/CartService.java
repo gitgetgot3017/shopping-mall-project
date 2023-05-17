@@ -34,4 +34,8 @@ public class CartService {
             cartRepository.increaseCartItemCount(cartNum, itemDetailForm); //3-2
         }
     }
+
+    public void deleteItemFromCart(long cartItemNum) {
+        cartRepository.deleteCartItem(cartItemNum);
+    }
 }

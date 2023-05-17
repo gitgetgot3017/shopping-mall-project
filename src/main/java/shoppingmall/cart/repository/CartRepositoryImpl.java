@@ -156,6 +156,25 @@ public class CartRepositoryImpl implements CartRepository {
         }
     }
 
+    @Override
+    public void deleteCartItem(long cartItemNum) {
+        String sql = "delete from cart_item where cart_item_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, cartItemNum);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, null);
+        }
+    }
+
     private void close(Connection conn, Statement stmt, ResultSet rs) {
         JdbcUtils.closeResultSet(rs);
         JdbcUtils.closeStatement(stmt);
