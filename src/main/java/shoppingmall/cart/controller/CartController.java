@@ -57,4 +57,11 @@ public class CartController {
         cartService.deleteItemFromCart(cartItemNum);
         return "cart/cart";
     }
+
+    @PutMapping("/{cartItemNum}")
+    public String cart(@PathVariable long cartItemNum, int count) {
+
+        cartService.updateItemInCart(cartItemNum, count);
+        return "cart/cart";
+    }
 }

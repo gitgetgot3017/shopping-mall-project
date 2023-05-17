@@ -38,4 +38,8 @@ public class CartService {
     public void deleteItemFromCart(long cartItemNum) {
         cartRepository.deleteCartItem(cartItemNum);
     }
+
+    public void updateItemInCart(long cartItemNum, int count) {
+        cartRepository.updateCartItem(cartItemNum, count);
+    }
 }

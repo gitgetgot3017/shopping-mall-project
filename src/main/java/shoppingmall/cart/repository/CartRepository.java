@@ -11,4 +11,5 @@ public interface CartRepository {
     boolean checkPresentCartItem(long cartNum, long itemNum);
     void increaseCartItemCount(long cartNum, ItemDetailForm itemDetailForm);
     void deleteCartItem(long cartItemNum);
+    void updateCartItem(long cartItemNum, int count);
 }

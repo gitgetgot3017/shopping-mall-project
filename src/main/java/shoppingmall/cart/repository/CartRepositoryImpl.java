@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PathVariable;
 import shoppingmall.cart.dto.ItemDetailForm;
 import shoppingmall.exception.RuntimeSQLException;
 
@@ -167,6 +168,26 @@ public class CartRepositoryImpl implements CartRepository {
             conn = dataSource.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1, cartItemNum);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, null);
+        }
+    }
+
+    @Override
+    public void updateCartItem(long cartItemNum, int count) {
+        String sql = "update cart_item set count = ? where cart_item_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, count);
+            pstmt.setLong(2, cartItemNum);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeSQLException(e);
