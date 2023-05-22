@@ -129,4 +129,13 @@ public class OrderController {
         model.addAttribute("orderDtoList",  orderService.viewOrderHistory(member.getMember_num()));
         return "order/orderHistory";
     }
+
+    @PutMapping("/orders/{orderNum}")
+    public String order(@PathVariable long orderNum, Model model,
+                        @SessionAttribute(name = LOGIN_MEMBER, required = false) Member member) {
+
+        orderService.cancelOrder(orderNum);
+        model.addAttribute("orderDtoList", orderService.viewOrderHistory(member.getMember_num()));
+        return "order/orderHistory";
+    }
 }

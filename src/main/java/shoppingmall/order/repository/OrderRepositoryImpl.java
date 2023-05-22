@@ -137,13 +137,14 @@ public class OrderRepositoryImpl implements OrderRepository {
             while (rs.next()) {
                 LocalDate orderDate = rs.getTimestamp("order_date").toLocalDateTime().toLocalDate();
                 long orderNum = rs.getLong("order_num");
+                int totalPrice = rs.getInt("total_price");
 
                 orderDtoList.add(new OrderDto(
                         orderDate,
                         orderNum,
-                        rs.getInt("total_price"),
+                        totalPrice,
                         getOrderItems(orderNum),
-                        decideCancelOrd(orderDate))
+                        decideCancelOrd(orderDate, totalPrice))
                 );
             }
             return orderDtoList;
@@ -193,8 +194,96 @@ public class OrderRepositoryImpl implements OrderRepository {
         }
     }
 
-    private boolean decideCancelOrd(LocalDate orderDate) {
-        return orderDate.plusDays(7).isEqual(LocalDate.now()) || orderDate.plusDays(7).isAfter(LocalDate.now());
+    private boolean decideCancelOrd(LocalDate orderDate, int totalPrice) { //totalPrice == 0: 주문 취소 상태 -> '주문 취소' 버튼 보이지 않도록
+        return (orderDate.plusDays(7).isEqual(LocalDate.now()) || orderDate.plusDays(7).isAfter(LocalDate.now()))
+                && (totalPrice != 0);
+    }
+
+    @Override
+    public void updateOrderStatus(long orderNum) {
+        String sql = "update orders set order_status = 'CANCEL' where order_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, orderNum);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, null);
+        }
+    }
+
+    @Override
+    public void updateOrderItemPrice(long orderNum) {
+        String sql = "update order_item set order_price = 0 where order_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, orderNum);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, null);
+        }
+    }
+
+    @Override
+    public List<RdStockInfo> toRestoreItemStock(long orderNum) {
+        String sql = "select item_num, count from order_item where order_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, orderNum);
+            rs = pstmt.executeQuery();
+
+            List<RdStockInfo> rdStockInfoList = new ArrayList<>();
+            while (rs.next()) {
+                rdStockInfoList.add(new RdStockInfo(
+                        rs.getLong("item_num"),
+                        rs.getInt("count"))
+                );
+            }
+            return rdStockInfoList;
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public void restoreItemStock(RdStockInfo rdStockInfo) {
+        String sql = "update item set stock = stock+? where item_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, rdStockInfo.getCount());
+            pstmt.setLong(2, rdStockInfo.getItemNum());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, null);
+        }
     }
 
     private void close(Connection conn, Statement stmt, ResultSet rs) {

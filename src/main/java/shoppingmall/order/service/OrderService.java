@@ -35,4 +35,13 @@ public class OrderService {
     public List<OrderDto> viewOrderHistory(long memberNum) {
         return orderRepository.getOrderHistory(memberNum);
     }
+
+    public void cancelOrder(long orderNum) {
+
+        orderRepository.updateOrderStatus(orderNum);
+        orderRepository.updateOrderItemPrice(orderNum);
+        for(RdStockInfo rdStockInfo : orderRepository.toRestoreItemStock(orderNum)) {
+            orderRepository.restoreItemStock(rdStockInfo);
+        }
+    }
 }

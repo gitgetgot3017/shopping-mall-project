@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RdStockInfo { //상품의 재고를 감소시키기 위해 필요한 정보
+public class RdStockInfo { //상품의 재고를 감소/원복하기 위해 필요한 정보
 
     private long itemNum;
     private int count;
