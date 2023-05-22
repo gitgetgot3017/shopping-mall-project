@@ -3,6 +3,7 @@ package shoppingmall.order.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shoppingmall.order.dto.OrderDto;
 import shoppingmall.order.dto.RdStockInfo;
 import shoppingmall.order.entity.Order;
 import shoppingmall.order.entity.OrderItem;
@@ -29,5 +30,9 @@ public class OrderService {
             orderRepository.addOrderItem(orderItems.get(i));
             orderRepository.reduceItemStock(rdStockInfos.get(i), stock0AfterOrderList.get(i));
         }
+    }
+
+    public List<OrderDto> viewOrderHistory(long memberNum) {
+        return orderRepository.getOrderHistory(memberNum);
     }
 }

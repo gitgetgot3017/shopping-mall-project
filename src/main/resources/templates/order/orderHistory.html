@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::div})}">
+
+<div>
+
+    <h3>
+        주문 이력
+    </h3>
+
+    <div th:each="orderDto : ${orderDtoList}" th:object="${orderDto}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td th:text="*{orderDate}"></td>
+                    <td th:text="'주문번호: ' + *{orderNum}"></td>
+                    <td></td>
+                    <td th:text="*{totalPrice} + '원'"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">상품명</td>
+                    <td>수량</td>
+                    <td>주문금액</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="orderItemDto : *{orderItemDtoList}" th:object="${orderItemDto}">
+                    <td>
+                        <a th:href="@{/items/{itemNum}(itemNum=*{itemNum})}">
+                            <img th:src="@{/image/{saveImgName}(saveImgName=*{saveImgName})}" th:alt="*{itemName}" width="100" height="100">
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{/items/{itemNum}(itemNum=*{itemNum})}" th:text="*{itemName}"></a>
+                    </td>
+                    <td th:text="*{count}"></td>
+                    <td th:text="*{orderPrice}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <form method="POST" th:action="@{/orders/{orderNum}(orderNum=*{orderNum})}" th:if="*{presentCancelOrdBtn}">
+            <input type="hidden" name="_method" value="PUT">
+            <div style="text-align: center;">
+                <input type="submit" value="주문 취소" class="btn btn-secondary btn-sm">
+            </div>
+        </form>
+    </div>
+
+</div>

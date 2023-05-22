@@ -4,12 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 import shoppingmall.exception.RuntimeSQLException;
+import shoppingmall.order.dto.OrderDto;
+import shoppingmall.order.dto.OrderItemDto;
 import shoppingmall.order.dto.RdStockInfo;
 import shoppingmall.order.entity.Order;
 import shoppingmall.order.entity.OrderItem;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -108,6 +113,88 @@ public class OrderRepositoryImpl implements OrderRepository {
         } finally {
             close(conn, pstmt, null);
         }
+    }
+
+    @Override
+    public List<OrderDto> getOrderHistory(long memberNum) {
+        String sql = "select o.order_num, order_date, sum(order_price) total_price " +
+                "from orders o join order_item oi on o.order_num = oi.order_num " +
+                "where member_num = ? " +
+                "group by order_num " +
+                "order by order_num desc";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, memberNum);
+            rs = pstmt.executeQuery();
+
+            List<OrderDto> orderDtoList = new ArrayList<>();
+            while (rs.next()) {
+                LocalDate orderDate = rs.getTimestamp("order_date").toLocalDateTime().toLocalDate();
+                long orderNum = rs.getLong("order_num");
+
+                orderDtoList.add(new OrderDto(
+                        orderDate,
+                        orderNum,
+                        rs.getInt("total_price"),
+                        getOrderItems(orderNum),
+                        decideCancelOrd(orderDate))
+                );
+            }
+            return orderDtoList;
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public List<OrderItemDto> getOrderItems(long orderNum) {
+        //sql문 작성 순서
+        //1. order_item(foi) 준비
+        //2. item(i), item_img(fii) 조인(ifii)
+        //3. foi, ifii 조인
+        String sql = "select count, order_price, ifii.* " +
+                "from (select * from order_item where order_num = ?) foi " +
+                "join (select i.item_num, item_name, save_img_name from item i join (select * from item_img where rep_img = true) fii on i.item_num = fii.item_num) ifii " +
+                "on foi.item_num = ifii.item_num";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, orderNum);
+            rs = pstmt.executeQuery();
+
+            List<OrderItemDto> orderItemDtoList = new ArrayList<>();
+            while (rs.next()) {
+                orderItemDtoList.add(new OrderItemDto(
+                        rs.getLong("item_num"),
+                        rs.getString("save_img_name"),
+                        rs.getString("item_name"),
+                        rs.getInt("count"),
+                        rs.getInt("order_price"))
+                );
+            }
+            return orderItemDtoList;
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    private boolean decideCancelOrd(LocalDate orderDate) {
+        return orderDate.plusDays(7).isEqual(LocalDate.now()) || orderDate.plusDays(7).isAfter(LocalDate.now());
     }
 
     private void close(Connection conn, Statement stmt, ResultSet rs) {

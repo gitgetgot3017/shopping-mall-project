@@ -122,4 +122,11 @@ public class OrderController {
         }
         return itemDetailFormList;
     }
+
+    @GetMapping("/orders")
+    public String order(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member, Model model) {
+
+        model.addAttribute("orderDtoList",  orderService.viewOrderHistory(member.getMember_num()));
+        return "order/orderHistory";
+    }
 }
