@@ -174,4 +174,16 @@ public class ItemController {
 
         return "redirect:/items";
     }
+
+    @GetMapping("/items/{itemNum}")
+    public String itemDetail(@PathVariable long itemNum, Model model) {
+
+        //악의적 요청에 대비한 코드 - POSTMAN 등을 통해 존재하지 않는 itemNum를 요청
+        if (itemService.findItem(itemNum).isEmpty()) {
+            throw new IllegalArgumentException("잘못된 요청: 존재하지 않는 itemNum을 요청했습니다.");
+        }
+
+        model.addAttribute("itemDetailDto", itemService.findItemDetail(itemNum));
+        return "item/itemDetail";
+    }
 }

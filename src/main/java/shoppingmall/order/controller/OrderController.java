@@ -6,9 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import shoppingmall.cart.service.CartService;
+import shoppingmall.item.dto.ItemDetailDto;
 import shoppingmall.item.dto.ItemDetailForm;
 import shoppingmall.item.dto.ItemDetailForms;
 import shoppingmall.item.entity.Item;
+import shoppingmall.item.service.ItemService;
 import shoppingmall.member.entity.Member;
 import shoppingmall.order.dto.RdStockInfo;
 import shoppingmall.order.entity.Order;
@@ -27,6 +29,7 @@ public class OrderController {
 
     private final CartService cartService;
     private final OrderService orderService;
+    private final ItemService itemService;
 
     @PostMapping("/orders-form")
     public String order(@ModelAttribute ItemDetailForms itemDetailForms, Model model,
@@ -41,6 +44,11 @@ public class OrderController {
         //orderForm으로 이동할 수 없는 경우: 상품 재고 부족
         if (!outOfStckAlertMsg.equals("")) {
             model.addAttribute("outOfStckAlertMsg", outOfStckAlertMsg);
+            if (retView.equals("item/itemDetail")) {
+                ItemDetailDto itemDetailDto = itemService.findItemDetail(itemDetailFormList.get(0).getItemNum());
+                itemDetailDto.setCount(itemDetailFormList.get(0).getCount());
+                model.addAttribute("itemDetailDto", itemDetailDto);
+            }
             return retView;
         }
 

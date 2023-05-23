@@ -9,10 +9,7 @@ import org.springframework.ui.Model;
 import shoppingmall.exception.RuntimeSQLException;
 import shoppingmall.item.constant.ItemSellStatus;
 import shoppingmall.item.constant.ItemSortBy;
-import shoppingmall.item.dto.ItemEditDto;
-import shoppingmall.item.dto.ItemSearchDto;
-import shoppingmall.item.dto.MainItemDto;
-import shoppingmall.item.dto.MainItemSearchDto;
+import shoppingmall.item.dto.*;
 import shoppingmall.item.entity.Item;
 
 import javax.sql.DataSource;
@@ -342,6 +339,71 @@ public class ItemRepositoryImpl implements ItemRepository {
                 return rs.getInt(1);
             }
             return 0;
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public ItemDetailDto findItemDetail(long itemNum) {
+        String sql = "select item_num, item_name, price, item_detail from item where item_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, itemNum);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                List<String> notRepsaveImgName = new ArrayList<>();
+                String repSaveImgName = getSaveImgNames(itemNum, notRepsaveImgName);
+
+                return new ItemDetailDto(
+                        rs.getLong("item_num"),
+                        rs.getString("item_name"),
+                        rs.getInt("price"),
+                        rs.getString("item_detail"),
+                        repSaveImgName,
+                        notRepsaveImgName
+                );
+            }
+            throw new IllegalArgumentException("존재하지 않는 itemNum입니다.");
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public String getSaveImgNames(long itemNum, List<String> notRepsaveImgName) {
+        String sql = "select save_img_name, rep_img from item_img where item_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, itemNum);
+            rs = pstmt.executeQuery();
+
+            String repSaveImgName = "";
+            while (rs.next()) {
+                if (rs.getBoolean("rep_img")) {
+                    repSaveImgName = rs.getString("save_img_name");
+                } else {
+                    notRepsaveImgName.add(rs.getString("save_img_name"));
+                }
+            }
+            return repSaveImgName;
         } catch (SQLException e) {
             throw new RuntimeSQLException(e);
         } finally {

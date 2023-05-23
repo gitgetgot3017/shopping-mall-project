@@ -1,10 +1,7 @@
 package shoppingmall.item.respository;
 
 import org.springframework.ui.Model;
-import shoppingmall.item.dto.ItemEditDto;
-import shoppingmall.item.dto.ItemSearchDto;
-import shoppingmall.item.dto.MainItemDto;
-import shoppingmall.item.dto.MainItemSearchDto;
+import shoppingmall.item.dto.*;
 import shoppingmall.item.entity.Item;
 
 import java.util.List;
@@ -20,4 +17,6 @@ public interface ItemRepository {
     void updateItem(Item item);
     List<MainItemDto> findItemsMain(MainItemSearchDto mainSearchDto, int page);
     int findRowNum(String search);
+    ItemDetailDto findItemDetail(long itemNum);
+    String getSaveImgNames(long itemNum, List<String> notRepsaveImgName);
 }
