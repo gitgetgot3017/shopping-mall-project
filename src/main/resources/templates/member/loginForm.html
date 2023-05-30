@@ -4,6 +4,8 @@
 
 <div class="formContentWidthNarrow">
 
+    <h2>로그인</h2>
+
     <form method="POST" action="/members-login" th:object="${loginFormDto}">
         <!-- 글로벌 오류 메시지 -->
         <div th:if="${#fields.hasGlobalErrors()}">

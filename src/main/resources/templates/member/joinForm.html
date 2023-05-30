@@ -4,6 +4,8 @@
 
 <div class="formContentWidthNarrow">
 
+    <h2>회원가입</h2>
+
     <form method="POST" action="/members" th:object="${joinFormDto}">
         <!-- 글로벌 오류 메시지 -->
         <div th:if="${#fields.hasGlobalErrors()}">

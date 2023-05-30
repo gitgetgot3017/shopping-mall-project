@@ -4,12 +4,10 @@
 
 <div class="formContentWidthWide">
 
+    <h2>상품 수정</h2>
+
     <form method="POST" th:action="@{/items/{itemNum}(itemNum=${itemEditDto.itemNum})}" th:object="${itemEditDto}" enctype="multipart/form-data">
         <input type="hidden" name="_method" value="PUT">
-
-        <p class="h2">
-            상품 수정
-        </p>
 
         <div th:if="${#fields.hasGlobalErrors()}">
             <p class="field-error" th:each="globalErr : ${#fields.globalErrors()}" th:text="${globalErr}"></p>

@@ -4,11 +4,9 @@
 
 <div class="formContentWidthWide">
 
-    <form method="POST" action="/items" th:object="${itemRegForm}" enctype="multipart/form-data">
+    <h2>상품 등록</h2>
 
-        <p class="h2">
-            상품 등록
-        </p>
+    <form method="POST" action="/items" th:object="${itemRegForm}" enctype="multipart/form-data">
 
         <div th:if="${#fields.hasGlobalErrors()}">
             <p class="field-error" th:each="globalErr : ${#fields.globalErrors()}" th:text="${globalErr}"></p>
