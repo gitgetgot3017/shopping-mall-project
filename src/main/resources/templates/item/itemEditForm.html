@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/layout :: layout(~{::div})}">
 
-<div>
+<div class="formContentWidthWide">
 
     <form method="POST" th:action="@{/items/{itemNum}(itemNum=${itemEditDto.itemNum})}" th:object="${itemEditDto}" enctype="multipart/form-data">
         <input type="hidden" name="_method" value="PUT">

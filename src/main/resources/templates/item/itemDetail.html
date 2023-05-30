@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/layout :: layout(~{::div})}">
 
-<div th:object="${itemDetailDto}" style="margin-left:25%; margin-right:25%;">
+<div th:object="${itemDetailDto}" class="contentWidthNarrow">
 
     <script th:inline="javascript">
         if ([[${outOfStckAlertMsg}]] != null) {

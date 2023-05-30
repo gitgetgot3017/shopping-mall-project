@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/layout :: layout(~{::div})}">
 
-<div>
+<div class="formContentWidthNarrow">
 
     <form method="POST" action="/members-login" th:object="${loginFormDto}">
         <!-- 글로벌 오류 메시지 -->
