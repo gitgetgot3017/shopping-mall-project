@@ -8,24 +8,24 @@
         <div th:if="${pageNum != 0}">
             <table class="table">
                 <thead>
-                <tr>
-                    <td>상품아이디</td>
-                    <td>상품명</td>
-                    <td>가격</td>
-                    <td>재고</td>
-                    <td>판매상태</td>
-                    <td>등록일</td>
-                </tr>
+                    <tr>
+                        <td>상품아이디</td>
+                        <td>상품명</td>
+                        <td>가격</td>
+                        <td>재고</td>
+                        <td>판매상태</td>
+                        <td>등록일</td>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr th:each="item : ${items}">
-                    <td th:text="${item.itemNum}"></td>
-                    <td><a th:href="@{/items-editform/{itemNum}(itemNum=${item.itemNum})}" th:text="${item.itemName}"></a></td>
-                    <td th:text="${item.price}"></td>
-                    <td th:text="${item.stock}"></td>
-                    <td th:text="${#strings.equals(item.itemSellStatus, 'SELL')} ? '판매중' : '품절'"></td>
-                    <td th:text="${item.regdate}"></td>
-                </tr>
+                    <tr th:each="item : ${items}">
+                        <td th:text="${item.itemNum}"></td>
+                        <td><a th:href="@{/items-editform/{itemNum}(itemNum=${item.itemNum})}" th:text="${item.itemName}"></a></td>
+                        <td th:text="${item.price}"></td>
+                        <td th:text="${item.stock}"></td>
+                        <td th:text="${#strings.equals(item.itemSellStatus, 'SELL')} ? '판매중' : '품절'"></td>
+                        <td th:text="${item.regdate}"></td>
+                    </tr>
                 </tbody>
             </table>
 
