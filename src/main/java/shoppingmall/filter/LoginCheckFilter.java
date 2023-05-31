@@ -12,11 +12,10 @@ public class LoginCheckFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String requestURI = httpRequest.getRequestURI();
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         //'POST /members' 요청은 LoginCheckFilter를 거칠 필요 없음
-        if (requestURI.equals("/members") || requestURI.equals("/members/")) {
+        if (httpRequest.getMethod().equals("POST")) {
             chain.doFilter(request, response);
             return;
         }

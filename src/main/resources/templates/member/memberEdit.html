@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::div})}">
+
+<div class="formContentWidthNarrow contentTpBtmMargin">
+
+    <script>
+        if ([[${modifyMemberInfoAlert}]]) {
+            alert("회원 정보가 수정되었습니다.");
+        }
+    </script>
+
+    <h2>회원정보 수정</h2>
+
+    <form method="POST" action="/members" th:object="${member}">
+        <input type="hidden" name="_method" value="PUT">
+        <div class="form-group">
+            <label for="id">아이디</label>
+            <input type="text" id="id" th:field="*{id}" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" class="form-control" th:errorclass="field-error">
+            <input type="hidden" name="storedPassword" th:value="*{password}">
+            <p class="field-error" th:errors="*{password}"></p>
+        </div>
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" th:errorclass="field-error">
+            <p class="field-error" th:errors="*{name}"></p>
+        </div>
+        <div class="form-group">
+            <label for="phone">휴대전화</label>
+            <input type="text" id="phone" th:field="*{phone}" class="form-control" th:errorclass="field-error">
+            <p class="field-error" th:errors="*{phone}"></p>
+        </div>
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control" th:errorclass="field-error">
+            <p class="field-error" th:errors="*{email}"></p>
+        </div>
+        <div class="btnLocation">
+            <input type="submit" value="회원정보 수정" class="btn btn-primary">
+        </div>
+    </form>
+
+    <form method="POST" action="/members">
+        <input type="hidden" name="_method" value="DELETE">
+        <div class="btnLocation">
+            <input type="submit" value="회원 탈퇴하기" class="btn btn-secondary">
+        </div>
+    </form>
+
+</div>
+
+</html>

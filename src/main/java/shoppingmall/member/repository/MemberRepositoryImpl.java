@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 import shoppingmall.exception.RuntimeSQLException;
 import shoppingmall.member.constant.Role;
+import shoppingmall.member.dto.MemberEditForm;
 import shoppingmall.member.entity.Member;
 
 import javax.sql.DataSource;
@@ -61,8 +62,11 @@ public class MemberRepositoryImpl implements MemberRepository {
             if (rs.next()) {
                 Member member = new Member();
                 member.setMember_num(rs.getLong("member_num"));
+                member.setId(rs.getString("id"));
                 member.setPassword(rs.getString("password"));
                 member.setName(rs.getString("name"));
+                member.setPhone(rs.getString("phone"));
+                member.setEmail(rs.getString("email"));
                 member.setRole(Role.valueOf(rs.getString("role")));
                 return Optional.of(member);
             }
@@ -73,6 +77,29 @@ public class MemberRepositoryImpl implements MemberRepository {
             throw new RuntimeSQLException(e);
         } finally {
             close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public void updateMember(long memberNum, MemberEditForm memberEditForm) {
+        String sql = "update member set password = ?, name = ?, phone = ?, email = ? where member_num = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, memberEditForm.getPassword());
+            pstmt.setString(2, memberEditForm.getName());
+            pstmt.setString(3, memberEditForm.getPhone());
+            pstmt.setString(4, memberEditForm.getEmail());
+            pstmt.setLong(5, memberNum);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, null);
         }
     }
 

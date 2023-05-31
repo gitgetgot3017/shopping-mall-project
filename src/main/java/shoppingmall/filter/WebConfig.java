@@ -13,7 +13,7 @@ public class WebConfig {
     public FilterRegistrationBean regLoginCheckFilter() {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new LoginCheckFilter());
-        filterFilterRegistrationBean.addUrlPatterns("/members/*", "/members-logout", "/carts/*", "/orders-form", "/orders/*");
+        filterFilterRegistrationBean.addUrlPatterns("/members", "/members-logout", "/carts/*", "/orders-form", "/orders/*");
         return filterFilterRegistrationBean;
     }
 

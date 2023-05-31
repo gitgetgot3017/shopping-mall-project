@@ -3,6 +3,7 @@ package shoppingmall.member.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shoppingmall.member.dto.JoinFormDto;
+import shoppingmall.member.dto.MemberEditForm;
 import shoppingmall.member.entity.Member;
 import shoppingmall.member.repository.MemberRepository;
 
@@ -35,5 +36,13 @@ public class MemberService {
             }
         }
         return Optional.empty();
+    }
+
+    public Optional<Member> getMemberInfo(String id) {
+        return memberRepository.findMemberById(id);
+    }
+
+    public void modifyMemberInfo(long memberNum, MemberEditForm memberEditForm) {
+        memberRepository.updateMember(memberNum, memberEditForm);
     }
 }

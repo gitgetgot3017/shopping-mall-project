@@ -5,18 +5,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import shoppingmall.member.constant.SessionConst;
 import shoppingmall.member.dto.JoinFormDto;
 import shoppingmall.member.dto.LoginFormDto;
+import shoppingmall.member.dto.MemberEditForm;
 import shoppingmall.member.entity.Member;
 import shoppingmall.member.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
+
+import static shoppingmall.member.constant.SessionConst.LOGIN_MEMBER;
 
 @Controller
 @RequiredArgsConstructor
@@ -89,5 +90,29 @@ public class MemberController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/members")
+    public String editMember(@SessionAttribute(name = LOGIN_MEMBER) Member member, Model model) {
+
+        model.addAttribute("member", memberService.getMemberInfo(member.getId()).get());
+        return "member/memberEdit";
+    }
+
+    @PutMapping("/members")
+    public String editMember(@Validated @ModelAttribute("member") MemberEditForm memberEditForm, BindingResult bindingResult,
+                             @SessionAttribute(name = LOGIN_MEMBER) Member member, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "member/memberEdit";
+        }
+
+        if (memberEditForm.getPassword().equals("")) { //사용자가 비밀번호를 입력하지 않은 경우. 즉, 비밀번호를 변경할 의사 없음
+            memberEditForm.setPassword(memberEditForm.getStoredPassword());
+        }
+
+        memberService.modifyMemberInfo(member.getMember_num(), memberEditForm);
+        model.addAttribute("modifyMemberInfoAlert", true);
+        return "member/memberEdit";
     }
 }
