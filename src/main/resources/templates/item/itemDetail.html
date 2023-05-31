@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/layout :: layout(~{::div})}">
 
-<div th:object="${itemDetailDto}" class="contentWidthNarrow">
+<div th:object="${itemDetailDto}" class="contentWidthNarrow contentTpBtmMargin">
 
     <script th:inline="javascript">
         if ([[${outOfStckAlertMsg}]] != null) {
@@ -26,7 +26,7 @@
                 <h4 th:text="*{itemName}"></h4>
                 <input type="hidden" name="itemName" th:value="*{itemName}">
 
-                <div class="text-right mgt-50">
+                <div class="text-right mgt-30">
                     <h5 class="text-left" th:text="*{price} + '원'"></h5>
                     <input type="hidden" name="price" th:value="*{price}">
                     <div class="input-group w-50">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <div class="text-right mgt-50">
+                <div class="text-right mgt-30">
                     <input type="submit" value="장바구니 담기" class="btn btn-primary" onclick="clickBtn('/carts')">
                     <input type="submit" value="주문하기" class="btn btn-secondary" onclick="clickBtn('/orders-form')">
                 </div>
@@ -44,7 +44,7 @@
         </div>
     </form>
 
-    <div class="jumbotron jumbotron-fluid mgt-50">
+    <div class="jumbotron jumbotron-fluid mgt-70">
         <div class="container">
             <h4>상품 상세 설명</h4>
             <hr class="my-4">
@@ -52,8 +52,8 @@
         </div>
     </div>
 
-    <div th:each="notRepsaveImgName : *{notRepsaveImgNames}" class="text-center mgt-50">
-        <img th:src="@{/image/{saveImgName}(saveImgName=${notRepsaveImgName})}" class="rounded mgb-15" width="400">
+    <div th:each="notRepsaveImgName : *{notRepsaveImgNames}" class="text-center mgt-70">
+        <img th:src="@{/image/{saveImgName}(saveImgName=${notRepsaveImgName})}" class="rounded" width="400">
     </div>
 
 </div>

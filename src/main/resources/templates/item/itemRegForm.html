@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/layout :: layout(~{::div})}">
 
-<div class="formContentWidthWide">
+<div class="formContentWidthWide contentTpBtmMargin">
 
     <h2>상품 등록</h2>
 
@@ -40,14 +40,13 @@
             <p class="field-error" th:errors="*{stock}"></p>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mgb-30">
             <label for="itemSellStatus">판매 상태</label>
             <select id="itemSellStatus" th:field="*{itemSellStatus}" class="form-control">
                 <option value="SELL">판매중</option>
                 <option value="SOLD_OUT">품절</option>
             </select>
         </div>
-        <br>
 
         <div class="form-group">
             <label>대표 상품 이미지</label>
@@ -57,7 +56,6 @@
             <label th:text="'선택 상품 이미지' + ${num}"></label>
             <input type="file" name="itemImgFiles" class="form-control">
         </div>
-        <br>
 
         <div class="btnLocation">
             <input type="submit" value="상품 등록" class="btn btn-primary">

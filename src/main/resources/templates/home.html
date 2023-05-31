@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/layout :: layout(~{::div})}">
 
-<div class="contentWidthWide">
+<div class="contentWidthWide contentTpBtmMargin">
 
     <div th:if="${presentItemYn}">
-        <div>
+        <div class="textAlignRight mgb-30">
             <a th:href="@{/(search=${param.search}, sortBy=${'recently'})}" th:style="${#strings.equals(param.sortBy, 'recently')} ? 'font-weight: bold;' : _">최신순</a>
             <a th:href="@{/(search=${param.search}, sortBy=${'lowPrice'})}" th:style="${#strings.equals(param.sortBy, 'lowPrice')} ? 'font-weight: bold;' : _">가격낮은순</a>
             <a th:href="@{/(search=${param.search}, sortBy=${'highPrice'})}" th:style="${#strings.equals(param.sortBy, 'highPrice')} ? 'font-weight: bold;' : _">가격높은순</a>
@@ -22,9 +22,8 @@
                 </div>
             </div>
         </div>
-        <br>
 
-        <nav>
+        <nav class="mgt-30">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:if="${prevOx}">
                     <a class="page-link" th:href="@{/(search=${param.search}, sortBy=${param.sortBy}, page=${startPage-1})}">&laquo;</a>

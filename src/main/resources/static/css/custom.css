@@ -8,12 +8,6 @@ a {
     color: black;
 }
 
-.mgb-15 {
-    margin-bottom: 15px;
-}
-.mgt-50 {
-    margin-top: 50px;
-}
 .repImgDiv {
     margin-right: 15px;
     height: auto;
@@ -55,8 +49,39 @@ table {
 
 h2 {
     text-align: center;
+    margin-bottom: 30px;
 }
 
 .btnLocation {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.contentTpBtmMargin {
+    margin-top: 50px;
+    margin-bottom: 60px;
+}
+
+.mgt-30 {
+    margin-top: 30px;
+}
+
+.mgt-70 {
+    margin-top: 70px;
+}
+
+.mgb-30 {
+    margin-bottom: 30px;
+}
+
+.mgb-100 {
+    margin-bottom: 100px;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+.textAlignCenter {
     text-align: center;
 }

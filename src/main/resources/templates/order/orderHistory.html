@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/layout :: layout(~{::div})}">
 
-<div class="contentWidthMiddle">
+<div class="contentWidthMiddle contentTpBtmMargin">
 
     <h2>주문 이력</h2>
 
-    <div th:each="orderDto : ${orderDtoList}" th:object="${orderDto}">
+    <div th:each="orderDto : ${orderDtoList}" th:object="${orderDto}" class="mgb-100">
         <table class="table">
             <thead>
                 <tr>

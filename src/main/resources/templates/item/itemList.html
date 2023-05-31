@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/layout :: layout(~{::div})}">
 
-<div class="contentWidthMiddle">
+<div class="contentWidthMiddle contentTpBtmMargin">
 
     <h2>상품 관리</h2>
 
@@ -31,7 +31,7 @@
                 </tbody>
             </table>
 
-            <nav>
+            <nav class="mgt-30">
                 <ul class="pagination justify-content-center">
                     <li class="page-item" th:if="${startPage} != 1">
                         <a class="page-link" th:href="@{/items(page=${startPage}-1, regDuration=${param.regDuration}, itemSellStatus=${param.itemSellStatus}, search=${param.search})}">&laquo;</a>
