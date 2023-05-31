@@ -38,7 +38,7 @@
         </table>
         <form method="POST" th:action="@{/orders/{orderNum}(orderNum=*{orderNum})}" th:if="*{presentCancelOrdBtn}">
             <input type="hidden" name="_method" value="PUT">
-            <div style="text-align: center;">
+            <div class="btnLocation">
                 <input type="submit" value="주문 취소" class="btn btn-secondary btn-sm">
             </div>
         </form>

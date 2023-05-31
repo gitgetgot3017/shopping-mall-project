@@ -53,22 +53,24 @@
             조회된 결과가 없습니다. 다시 입력해주세요.
         </div>
 
-        <div class="d-inline-flex">
-            <select th:field="*{regDuration}" class="form-control">
-                <option value="all">전체기간</option>
-                <option value="1d">1일</option>
-                <option value="1w">1주</option>
-                <option value="1m">1개월</option>
-                <option value="6m">6개월</option>
-            </select>
-            <select th:field="*{itemSellStatus}" class="form-control">
-                <option value="">판매상태(전체)</option>
-                <option value="SELL">판매</option>
-                <option value="SOLD_OUT">품절</option>
-            </select>
-            <input type="text" th:field="*{search}" class="form-control" placeholder="상품명을 입력해주세요">
+        <div class="btnLocation">
+            <div class="d-inline-flex">
+                <select th:field="*{regDuration}" class="form-control">
+                    <option value="all">전체기간</option>
+                    <option value="1d">1일</option>
+                    <option value="1w">1주</option>
+                    <option value="1m">1개월</option>
+                    <option value="6m">6개월</option>
+                </select>
+                <select th:field="*{itemSellStatus}" class="form-control">
+                    <option value="">판매상태(전체)</option>
+                    <option value="SELL">판매</option>
+                    <option value="SOLD_OUT">품절</option>
+                </select>
+                <input type="text" th:field="*{search}" class="form-control" placeholder="상품명을 입력해주세요">
+                <input type="submit" value="검색" class="btn btn-primary">
+            </div>
         </div>
-        <button class="btn btn-primary" type="submit">검색</button>
     </form>
 
 </div>

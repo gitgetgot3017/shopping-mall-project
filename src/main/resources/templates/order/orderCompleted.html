@@ -33,7 +33,9 @@
     </table>
     <p th:text="'주문 금액: ' + ${totalPrice} + '원'"></p>
 
-    <button type="submit" class="btn btn-primary" onclick="location.href='/'">쇼핑 계속하기</button>
-    <button type="submit" class="btn btn-secondary" onclick="location.href='/orders'">주문 상세보기</button>
+    <div class="btnLocation">
+        <button type="button" class="btn btn-primary" onclick="location.href='/'">쇼핑 계속하기</button>
+        <button type="button" class="btn btn-secondary" onclick="location.href='/orders'">주문 상세보기</button>
+    </div>
 
 </div>
