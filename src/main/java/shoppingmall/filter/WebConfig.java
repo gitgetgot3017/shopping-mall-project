@@ -14,6 +14,7 @@ public class WebConfig {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new LoginCheckFilter());
         filterFilterRegistrationBean.addUrlPatterns("/members", "/members-logout", "/carts/*", "/orders-form", "/orders/*");
+        filterFilterRegistrationBean.setOrder(1);
         return filterFilterRegistrationBean;
     }
 
@@ -22,6 +23,16 @@ public class WebConfig {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new AdminCheckFilter());
         filterFilterRegistrationBean.addUrlPatterns("/items-regform", "/items/*", "/items-editform/*");
+        filterFilterRegistrationBean.setOrder(1);
+        return filterFilterRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean regHeaderNavFilter() {
+        FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
+        filterFilterRegistrationBean.setFilter(new HeaderNavFilter());
+        filterFilterRegistrationBean.addUrlPatterns("/*");
+        filterFilterRegistrationBean.setOrder(2);
         return filterFilterRegistrationBean;
     }
 }

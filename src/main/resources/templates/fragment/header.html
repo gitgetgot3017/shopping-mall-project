@@ -11,30 +11,36 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/items-regform">상품 등록</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/items">상품 관리</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/carts">장바구니</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/orders">주문 이력</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/members-joinform">회원 가입</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/members-loginform">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/members-logout">로그아웃</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/members">회원정보 수정</a>
-                    </li>
+                    <th:block th:if="${admin}">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/items-regform">상품 등록</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/items">상품 관리</a>
+                        </li>
+                    </th:block>
+                    <th:block th:if="${login}">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/carts">장바구니</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/orders">주문 이력</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/members">회원정보 수정</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/members-logout">로그아웃</a>
+                        </li>
+                    </th:block>
+                    <th:block th:unless="${login}">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/members-joinform">회원 가입</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/members-loginform">로그인</a>
+                        </li>
+                    </th:block>
                 </ul>
                 <form method="GET" action="/" class="d-flex" role="search">
                     <input type="search" name="search" th:value="${search}" class="form-control me-2" placeholder="무엇을 찾으시나요?" aria-label="search">
