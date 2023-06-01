@@ -10,4 +10,6 @@ public interface MemberRepository {
     void saveMember(Member member);
     Optional<Member> findMemberById(String id);
     void updateMember(long memberNum, MemberEditForm memberEditForm);
+    void addMemberHistory(long memberNum);
+    void updateMemberPwd(long memberNum);
 }

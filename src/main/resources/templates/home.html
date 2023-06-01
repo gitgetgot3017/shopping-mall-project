@@ -4,6 +4,13 @@
 
 <div class="contentWidthWide contentTpBtmMargin">
 
+    <script>
+        let urlParams = new URL(location.href).searchParams;
+        if (urlParams.get('withdrawMemberAlert')) {
+            alert("회원 탈퇴 처리가 정상적으로 완료되었습니다. 안녕히 가세요.");
+        }
+    </script>
+
     <div th:if="${presentItemYn}">
         <div class="textAlignRight mgb-30">
             <a th:href="@{/(search=${param.search}, sortBy=${'recently'})}" th:style="${#strings.equals(param.sortBy, 'recently')} ? 'font-weight: bold;' : _">최신순</a>

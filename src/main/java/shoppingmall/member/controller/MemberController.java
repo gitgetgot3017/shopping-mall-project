@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import shoppingmall.member.constant.SessionConst;
 import shoppingmall.member.dto.JoinFormDto;
 import shoppingmall.member.dto.LoginFormDto;
@@ -114,5 +115,14 @@ public class MemberController {
         memberService.modifyMemberInfo(member.getMember_num(), memberEditForm);
         model.addAttribute("modifyMemberInfoAlert", true);
         return "member/memberEdit";
+    }
+
+    @DeleteMapping("/members")
+    public String withdrawMember(@SessionAttribute(name = LOGIN_MEMBER) Member member, HttpServletRequest request,
+                                 RedirectAttributes redirectAttributes) {
+
+        memberService.withdrawMember(member.getMember_num(), request);
+        redirectAttributes.addAttribute("withdrawMemberAlert", true);
+        return "redirect:/";
     }
 }
