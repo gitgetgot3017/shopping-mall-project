@@ -20,9 +20,7 @@ public class AdminCheckFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         //'GET /items/{itemNum}' 요청은 AdminCheckFilter를 거칠 필요 없음
-        //'GET /items/' 요청을 거르기 위한 로직
-        if (httpRequest.getMethod().equals("GET") &&
-                httpRequest.getRequestURI().contains("/items/") && !httpRequest.getRequestURI().substring(6).equals("/")) {
+        if (httpRequest.getMethod().equals("GET") && httpRequest.getRequestURI().contains("/items/")) {
             chain.doFilter(request, response);
             return;
         }

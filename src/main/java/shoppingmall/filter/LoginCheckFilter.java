@@ -15,7 +15,7 @@ public class LoginCheckFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         //'POST /members' 요청은 LoginCheckFilter를 거칠 필요 없음
-        if (httpRequest.getMethod().equals("POST")) {
+        if (httpRequest.getRequestURI().equals("/members") && httpRequest.getMethod().equals("POST")) {
             chain.doFilter(request, response);
             return;
         }
