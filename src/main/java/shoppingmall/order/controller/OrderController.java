@@ -33,7 +33,8 @@ public class OrderController {
 
     @PostMapping("/orders-form")
     public String order(@ModelAttribute ItemDetailForms itemDetailForms, Model model,
-                        @RequestParam String retView) {
+                        @RequestParam String retView,
+                        @SessionAttribute(name = LOGIN_MEMBER) Member member) {
 
         //ItemDetailForms -> List<ItemDetailForm>
         List<ItemDetailForm> itemDetailFormList = changeDataFormat(itemDetailForms);
@@ -44,10 +45,15 @@ public class OrderController {
         //orderForm으로 이동할 수 없는 경우: 상품 재고 부족
         if (!outOfStckAlertMsg.equals("")) {
             model.addAttribute("outOfStckAlertMsg", outOfStckAlertMsg);
+
             if (retView.equals("item/itemDetail")) {
                 ItemDetailDto itemDetailDto = itemService.findItemDetail(itemDetailFormList.get(0).getItemNum());
                 itemDetailDto.setCount(itemDetailFormList.get(0).getCount());
                 model.addAttribute("itemDetailDto", itemDetailDto);
+            }
+            else if (retView.equals("cart/cart")) {
+                model.addAttribute("presentCartItem", true);
+                model.addAttribute("cartItemDtoList", cartService.ShowItemInCart(member.getMember_num()));
             }
             return retView;
         }

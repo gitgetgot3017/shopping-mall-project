@@ -5,11 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
+import shoppingmall.cart.dto.CartItemDto;
 import shoppingmall.cart.dto.ItemDetailForm;
 import shoppingmall.exception.RuntimeSQLException;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -227,6 +230,67 @@ public class CartRepositoryImpl implements CartRepository {
             pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1, cartNum);
             pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, null);
+        }
+    }
+
+    @Override
+    public List<CartItemDto> findCartItems(long cartNum) {
+        //sql문 작성 순서
+        //1. cart_item(fci), item_img(fii) 조인(fcifii)
+        //2. fciii, item(i) 조인
+        String sql = "select fciii.*, item_name, price " +
+                "from (select cart_item_num, fci.item_num, count, save_img_name " +
+                "from (select * from cart_item where cart_num = ?) fci join (select * from item_img where rep_img = true) fii on fci.item_num = fii.item_num) fciii join item i on fciii.item_num = i.item_num " +
+                "order by cart_item_num desc";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, cartNum);
+            rs = pstmt.executeQuery();
+
+            List<CartItemDto> cartItemDtoList = new ArrayList<>();
+            while (rs.next()) {
+                cartItemDtoList.add(new CartItemDto(
+                        rs.getLong("cart_item_num"),
+                        rs.getLong("item_num"),
+                        rs.getString("save_img_name"),
+                        rs.getString("item_name"),
+                        rs.getInt("price"),
+                        rs.getInt("count")
+                ));
+            }
+            return cartItemDtoList;
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        } finally {
+            close(conn, pstmt, null);
+        }
+    }
+
+    @Override
+    public long findItemNum(long cartItemNum) {
+        String sql = "select item_num from cart_item where cart_item_num = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, cartItemNum);
+            rs = pstmt.executeQuery();
+
+            rs.next();
+            return rs.getLong("item_num");
         } catch (SQLException e) {
             throw new RuntimeSQLException(e);
         } finally {

@@ -2,14 +2,24 @@ package shoppingmall.cart.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import shoppingmall.cart.dto.CartItemDto;
 import shoppingmall.cart.dto.ItemDetailForm;
 import shoppingmall.cart.repository.CartRepository;
+import shoppingmall.item.dto.ItemEditDto;
+import shoppingmall.item.respository.ItemRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CartService {
 
     private final CartRepository cartRepository;
+    private final ItemRepository itemRepository;
 
     public int findItemStock(long itemNum) {
         return cartRepository.findItemStock(itemNum);
@@ -41,5 +51,17 @@ public class CartService {
 
     public void updateItemInCart(long cartItemNum, int count) {
         cartRepository.updateCartItem(cartItemNum, count);
+    }
+
+    public List<CartItemDto> ShowItemInCart(long memberNum) {
+        long cartNum = cartRepository.findCartNum(memberNum);
+        if (cartNum != 0L) {
+            return cartRepository.findCartItems(cartNum); //장바구니가 없는 회원이 호출해도 문제 없지만, 성능 상의 이유로 쿼리를 날리지 않을 것임
+        }
+        return new ArrayList<>();
+    }
+
+    public Optional<ItemEditDto> findItemStockAndName(long cartItemNum) {
+        return itemRepository.findByItemNum(cartRepository.findItemNum(cartItemNum)); //cartItemNum 150, itemNum 95
     }
 }

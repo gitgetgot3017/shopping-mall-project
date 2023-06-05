@@ -85,3 +85,9 @@ h2 {
 .textAlignCenter {
     text-align: center;
 }
+
+.cartXBtn {
+    padding: 0;
+    border: 0;
+    vertical-align: top;
+}

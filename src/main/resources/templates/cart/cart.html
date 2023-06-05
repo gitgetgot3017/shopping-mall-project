@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::div})}">
+
+<div class="contentWidthMiddle contentTpBtmMargin">
+
+    <script th:inline="javascript">
+        if ([[${outOfStckAlertMsg}]] != null) {
+            alert([[${outOfStckAlertMsg}]]);
+        }
+    </script>
+
+    <h2>장바구니</h2>
+
+    <form method="POST" action="/orders-form" th:if="${presentCartItem}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td colspan="2">상품명</td>
+                    <td>수량</td>
+                    <td>상품금액</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <form>
+                    <input type="submit" style="visibility: hidden;">
+                </form>
+                <tr th:each="cartItemDto : ${cartItemDtoList}" th:object="${cartItemDto}">
+                    <td>
+                        <a th:href="@{/items/{itemNum}(itemNum=*{itemNum})}">
+                            <img th:src="@{/image/{saveImgName}(saveImgName=*{saveImgName})}" th:alt="*{itemName}" width="100" height="100">
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{/items/{itemNum}(itemNum=*{itemNum})}" th:text="*{itemName}"></a>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/carts/{cartItemNum}(cartItemNum=*{cartItemNum})}">
+                            <input type="hidden" name="_method" value="PUT">
+                            <input type="number" name="count" th:value="*{count}" min="1" style="width: 50px;">
+                            <input type="submit" value="수량변경하기">
+                        </form>
+                    </td>
+                    <td th:text="*{price * count}"></td>
+                    <td>
+                        <form method="POST" th:action="@{/carts/{cartItemNum}(cartItemNum=*{cartItemNum})}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="submit" value="x" class="btn cartXBtn">
+                        </form>
+                    </td>
+                    <!-- POST /orders-form 요청보낼 때 전달할 데이터들 -->
+                    <input type="hidden" name="itemNum" th:value="*{itemNum}">
+                    <input type="hidden" name="saveImgName" th:value="*{saveImgName}">
+                    <input type="hidden" name="itemName" th:value="*{itemName}">
+                    <input type="hidden" name="price" th:value="*{price}">
+                    <input type="hidden" name="count" th:value="*{count}">
+                </tr>
+            </tbody>
+        </table>
+        <input type="hidden" name="retView" value="cart/cart">
+        <div class="btnLocation">
+          <input type="submit" value="주문하기" class="btn btn-primary">
+        </div>
+    </form>
+
+    <div th:unless="${presentCartItem}">
+        <p class="textAlignCenter">장바구니에 담긴 상품이 없습니다.</p>
+        <div class="btnLocation">
+          <button type="button" class="btn btn-outline-success" onclick="location.href='/'">쇼핑 계속하기</button>
+        </div>
+    </div>
+
+</div>
+
+</html>

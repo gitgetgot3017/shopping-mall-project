@@ -6,10 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import shoppingmall.cart.dto.CartItemDto;
 import shoppingmall.cart.dto.ItemDetailForm;
 import shoppingmall.cart.service.CartService;
+import shoppingmall.item.dto.ItemEditDto;
 import shoppingmall.item.service.ItemService;
 import shoppingmall.member.entity.Member;
+
+import java.util.List;
 
 import static shoppingmall.member.constant.SessionConst.LOGIN_MEMBER;
 
@@ -44,16 +48,43 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartItemNum}")
-    public String cart(@PathVariable long cartItemNum) {
+    public String cart(@PathVariable long cartItemNum, Model model,
+                       @SessionAttribute(name = LOGIN_MEMBER) Member member) {
 
         cartService.deleteItemFromCart(cartItemNum);
+        decideModelAttributeToCartView(cartService.ShowItemInCart(member.getMember_num()), model);
         return "cart/cart";
     }
 
     @PutMapping("/{cartItemNum}")
-    public String cart(@PathVariable long cartItemNum, int count) {
+    public String cart(@PathVariable long cartItemNum, @RequestParam int count, Model model,
+                       @SessionAttribute(name = LOGIN_MEMBER) Member member) {
 
-        cartService.updateItemInCart(cartItemNum, count);
+        ItemEditDto itemEditDto = cartService.findItemStockAndName(cartItemNum).get();
+        int stock = itemEditDto.getStock();
+
+        if (count > stock) {
+            model.addAttribute("outOfStckAlertMsg", "재고 부족: [" + itemEditDto.getItemName() + "] 상품은 " + stock + "개 이하로 담아주세요.\n");
+        } else {
+            cartService.updateItemInCart(cartItemNum, count);
+        }
+
+        decideModelAttributeToCartView(cartService.ShowItemInCart(member.getMember_num()), model);
         return "cart/cart";
+    }
+
+    @GetMapping
+    public String cart(@SessionAttribute(name = LOGIN_MEMBER) Member member, Model model) {
+
+        decideModelAttributeToCartView(cartService.ShowItemInCart(member.getMember_num()), model);
+        return "cart/cart";
+    }
+
+    //메소드명: Cart라는 View에 전달되는 Model에 attribute 넣을지를 결정한다
+    private void decideModelAttributeToCartView(List<CartItemDto> cartItemDtoList, Model model) {
+        if (cartItemDtoList.size() > 0) {
+            model.addAttribute("presentCartItem", true);
+            model.addAttribute("cartItemDtoList", cartItemDtoList);
+        }
     }
 }
