@@ -58,7 +58,7 @@ public class OrderController {
 
     @PostMapping("/orders")
     public String order(@ModelAttribute ItemDetailForms itemDetailForms, Model model,
-                        @SessionAttribute(name = LOGIN_MEMBER, required = false) Member member) {
+                        @SessionAttribute(name = LOGIN_MEMBER) Member member) {
 
         //ItemDetailForms -> List<ItemDetailForm>
         List<ItemDetailForm> itemDetailFormList = changeDataFormat(itemDetailForms);
@@ -132,7 +132,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public String order(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member, Model model) {
+    public String order(@SessionAttribute(name = LOGIN_MEMBER) Member member, Model model) {
 
         model.addAttribute("orderDtoList",  orderService.viewOrderHistory(member.getMember_num()));
         return "order/orderHistory";
@@ -140,7 +140,7 @@ public class OrderController {
 
     @PutMapping("/orders/{orderNum}")
     public String order(@PathVariable long orderNum, Model model,
-                        @SessionAttribute(name = LOGIN_MEMBER, required = false) Member member) {
+                        @SessionAttribute(name = LOGIN_MEMBER) Member member) {
 
         orderService.cancelOrder(orderNum);
         model.addAttribute("orderDtoList", orderService.viewOrderHistory(member.getMember_num()));

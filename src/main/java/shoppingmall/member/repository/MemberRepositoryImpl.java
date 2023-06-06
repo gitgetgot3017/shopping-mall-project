@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 import shoppingmall.exception.RuntimeSQLException;
+import shoppingmall.member.constant.Role;
 import shoppingmall.member.entity.Member;
 
 import javax.sql.DataSource;
@@ -62,6 +63,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                 member.setMember_num(rs.getLong("member_num"));
                 member.setPassword(rs.getString("password"));
                 member.setName(rs.getString("name"));
+                member.setRole(Role.valueOf(rs.getString("role")));
                 return Optional.of(member);
             }
 
