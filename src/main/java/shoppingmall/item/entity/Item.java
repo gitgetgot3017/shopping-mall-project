@@ -22,6 +22,10 @@ public class Item {
     public Item() {
     }
 
+    public Item(long itemNum) {
+        this.itemNum = itemNum;
+    }
+
     public Item(long itemNum, String itemName, int price, int stock, ItemSellStatus itemSellStatus, LocalDateTime regdate) {
         this.itemNum = itemNum;
         this.itemName = itemName;

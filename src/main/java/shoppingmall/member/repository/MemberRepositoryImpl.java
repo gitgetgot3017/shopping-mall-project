@@ -61,6 +61,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                 Member member = new Member();
                 member.setMember_num(rs.getLong("member_num"));
                 member.setPassword(rs.getString("password"));
+                member.setName(rs.getString("name"));
                 return Optional.of(member);
             }
 

@@ -4,6 +4,12 @@
 
 <div>
 
+    <script th:inline="javascript">
+        if ([[${outOfStckAlertMsg}]] != null) {
+            alert([[${outOfStckAlertMsg}]]);
+        }
+    </script>
+
     <h3>
         주문 / 결제
     </h3>
