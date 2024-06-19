@@ -51,13 +51,6 @@
 
 <hr>
 
-### 프로젝트 회고
-https://velog.io/@jiijo86/series/%EA%B0%9C%EC%9D%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B81-%EC%87%BC%ED%95%91%EB%AA%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8
-
-<br>
-
-<hr>
-
 ### 구현 프로젝트
 (기능 구현에 초점을 두고 개발하였기에 UI가 많이 단순합니다)
 ![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/089cecbb-7b2f-444f-b4aa-472bd63f4e4f)
@@ -72,3 +65,8 @@ https://velog.io/@jiijo86/series/%EA%B0%9C%EC%9D%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%
 ![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/136c65be-fc25-4411-96b1-517d70a03182)
 ![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/8021a11b-c1e5-4199-b62c-dfafbd6e0e3d)
 ![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/b0c5d719-4b7a-42c4-b60b-802f8101c7e6)
+
+<hr>
+
+### 프로젝트 구현 방법 및 트러블슈팅
+https://velog.io/@jiijo86/series/%EA%B0%9C%EC%9D%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B81-%EC%87%BC%ED%95%91%EB%AA%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8
