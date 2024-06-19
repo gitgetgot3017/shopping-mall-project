@@ -48,11 +48,27 @@
 
 ### 🔧 ERD 설계
 ![](https://velog.velcdn.com/images/jiijo86/post/ed4b1ca7-84c0-475c-9a3f-47297b242852/image.png)
-<hr>
-
-### 구현 프로젝트
-(기능 구현에 초점을 두고 개발하였기에 UI가 많이 단순합니다)
 
 <hr>
 
 ### 프로젝트 회고
+https://velog.io/@jiijo86/series/%EA%B0%9C%EC%9D%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B81-%EC%87%BC%ED%95%91%EB%AA%B0-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8
+
+<br>
+
+<hr>
+
+### 구현 프로젝트
+(기능 구현에 초점을 두고 개발하였기에 UI가 많이 단순합니다)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/089cecbb-7b2f-444f-b4aa-472bd63f4e4f)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/54bbb011-599a-44ac-8282-c893e2f96a02)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/4670e8cb-0c09-471d-a954-b356771c4a8a)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/8145e476-5bde-45ae-932f-01c75b2aa9dc)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/214d6ffb-ef64-4456-98f2-c905c90ec4d2)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/8a333192-3c07-4755-a834-b2b8be20bebe)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/f083f965-ae53-4933-94e7-e44a744cdf5c)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/99c3c04f-a31f-411b-8d66-0fb513add0ed)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/1d51b135-4212-4270-bf7c-39b5c42df5c3)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/136c65be-fc25-4411-96b1-517d70a03182)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/8021a11b-c1e5-4199-b62c-dfafbd6e0e3d)
+![image](https://github.com/gitgetgot3017/shopping-mall-project/assets/77274460/b0c5d719-4b7a-42c4-b60b-802f8101c7e6)
